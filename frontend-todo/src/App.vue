@@ -1,17 +1,16 @@
 <template>
-  <Tarea />
+  <ToDoListComponent/>
 </template>
 
 <script>
-import Tarea from './components/Tarea'
+import ToDoListComponent from './components/ToDoListComponent'
 
 export default {
   name: 'App',
   components: {
-    Tarea 
+    ToDoListComponent 
   }
 }
 </script>
-
 <style>
 </style>
