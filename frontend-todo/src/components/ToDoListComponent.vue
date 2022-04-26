@@ -7,6 +7,7 @@
         <div class="card mt-4">
           <div class="card-body">
             <div class="input-group">
+
               <input type="text" v-model="tarea" class="form-control form-control-lg" placeholder="Agregar">
               <div class="input-group-append">
                 <button v-on:click="agregarTarea()" class="btn btn-success btn-lg">Agregar</button>
@@ -14,14 +15,16 @@
             </div>
             <br>
             <pendientes-component
-              v-bind:listaTareas="listaTareas"
-              v-on:marcarTareaResuelta="marcarTareaResuelta"
+              v-if="listaTareas.length > 0"
+              :listaTareas="tareasPendientes"
+              v-on:cambiarEstadoTarea="cambiarEstadoTarea"
               v-on:eliminarTarea="eliminarTarea"></pendientes-component>
           </div>
            <div class="card-body">
              <completadas-component
-              v-bind:listaTareas="listaTareas"
-              v-on:marcarTareaPorHacer="marcarTareaPorHacer"
+              v-if="listaTareas.length > 0"
+              :listaTareas="tareasCompletadas"
+              v-on:cambiarEstadoTarea="cambiarEstadoTarea"
               v-on:eliminarTarea="eliminarTarea"></completadas-component>
           </div>
         </div>
@@ -35,10 +38,12 @@
 import Tarea from '../models/Tarea.js';
 import PendientesComponent from './PendientesComponent'
 import CompletadasComponent from './CompletadasComponent'
+import store from '../models/Store';
+import {mapState} from 'vuex';
 
   export default {
     name: 'ToDoListComponent',
-
+    store,
     components: {
     CompletadasComponent,
     PendientesComponent
@@ -47,26 +52,39 @@ import CompletadasComponent from './CompletadasComponent'
     data(){
       return {
         tarea: '',
-        listaTareas:[]
-      }
+        tareasPendientes: '',
+        tareasCompletadas: ''
+     }
     },
-    
-    methods: {
+
+    computed:{
+      ...mapState([
+        'listaTareas'
+        ])
+    },
+
+    methods: { 
       agregarTarea(){
-        const tarea = new Tarea(this.tarea, false);
-        this.listaTareas.push(tarea);
+        const tarea = new Tarea(this.listaTareas.length, this.tarea, false);
+        this.$store.dispatch('triggerFunction',
+          tarea
+        )
         this.tarea = '';
-      },
-       marcarTareaResuelta(id){
-        this.listaTareas[id].estado = true;
-      },
-       marcarTareaPorHacer(id){
-        this.listaTareas[id].estado = false;
-      },
-       eliminarTarea(id){
-        this.listaTareas.splice(id,1);
-      },
-      }
+        this.actualizarArrays();
+        },
+         cambiarEstadoTarea(id){
+        this.$store.commit('cambiarEstadoTarea', id);
+        this.actualizarArrays();
+        },
+        eliminarTarea(id){
+        this.$store.commit('eliminarTarea', id);
+        this.actualizarArrays();
+        },
+        actualizarArrays(){
+          this.tareasPendientes = this.$store.getters.getPendientes;
+          this.tareasCompletadas = this.$store.getters.getCompletadas;
+        }
+    }
     //    obtenerTareas(){
     //     axios.get("http://localhost:5288/api/Tarea").then(respuesta => {
     //       console.log(respuesta);

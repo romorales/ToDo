@@ -1,5 +1,6 @@
 export default class Tarea {
-  constructor(nombre, estado) {
+  constructor(id, nombre, estado) {
+    this.id = id;
     this.nombre = nombre;
     this.estado = estado;
   }

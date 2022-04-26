@@ -1,10 +1,11 @@
 <template>
   <div>
     <div class="card-body">
-           <h1 v-show="Array.isArray(listaTareasCompletadas) && listaTareasCompletadas.length !== 0" class="display-6 text-center">Resueltas</h1>
+      <div v-if="Array.isArray(listaTareasCompletadas) && listaTareasCompletadas.length > 0" class="middle-side">
+           <h1 class="display-6 text-center">Resueltas</h1>
              <ul class="list-group">
-              <li v-for="(tarea, index) of listaTareasCompletadas" :key="index" class="list-group-item d-flex justify-content-between">
-                <span class="cursor" v-on:click="marcarTareaPorHacer(tarea.id)" aria-label="Marcar">
+              <li v-for="tarea in listaTareasCompletadas" :key="tarea.id" class="list-group-item d-flex justify-content-between">
+                <span class="cursor" v-on:click="cambiarEstadoTarea(tarea.id)" aria-label="Marcar">
                   <i class="fas fa-check-circle"></i>
                 </span>
                 {{ tarea.nombre }}
@@ -14,41 +15,24 @@
               </li>
             </ul>
           </div>
-        </div>
+          </div>
+    </div>
 </template>
 
 <script>
   export default {
     name: 'CompletadasComponent',
-    props:['listaTareas'],
+    props: ['listaTareas'],
     
-    data(){
-      return {
-      }
-    },
-
     computed: {  
       listaTareasCompletadas(){
-        let lista = [];
-        for(let i = 0; i < this.listaTareas.length; i++)
-        {
-          let tarea = {
-            id: i,
-            nombre: this.listaTareas[i].nombre
-          }
-
-          if (this.listaTareas[i].estado == true)
-          {
-            lista.push(tarea); 
-          }
-        } 
-        return lista;
+       return this.listaTareas;
       }
     },
 
     methods: {
-      marcarTareaPorHacer(id){
-        this.$emit('marcarTareaPorHacer', [id]);
+      cambiarEstadoTarea(id){
+        this.$emit('cambiarEstadoTarea', [id]);
       },
       eliminarTarea(id){
         this.$emit('eliminarTarea', [id]);

@@ -8,7 +8,7 @@ import ToDoListComponent from './components/ToDoListComponent'
 export default {
   name: 'App',
   components: {
-    ToDoListComponent 
+    ToDoListComponent
   }
 }
 </script>

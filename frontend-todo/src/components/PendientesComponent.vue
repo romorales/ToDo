@@ -1,18 +1,21 @@
 <template>
   <div>
     <div class="card-body">
-            <h1 v-show="Array.isArray(listaTareasPendientes) && listaTareasPendientes.length !== 0" class="display-6 text-center" >Por hacer</h1>
+     
+      <div v-if="Array.isArray(listaTareasPendientes) && listaTareasPendientes.length > 0" class="middle-side">
+            <h1 class="display-6 text-center" >Por hacer</h1>
             <ul class="list-group">
-              <li v-for="(tarea, index) of listaTareasPendientes" :key="index" class="list-group-item d-flex justify-content-between">
-                <span class="cursor" v-on:click="marcarTareaResuelta(tarea.id)">
+              <li v-for="tarea of listaTareasPendientes" :key="tarea.id" class="list-group-item d-flex justify-content-between">
+                <span class="cursor" v-on:click="cambiarEstadoTarea(tarea.id)">
                   <i class="fa-regular fa-circle"></i>
                 </span>
                  {{ tarea.nombre }}
                <span class="text-danger cursor"  v-on:click="eliminarTarea(tarea.id)">
                 <i class="fas fa-trash"></i>
                 </span>
-              </li>
+              </li> 
             </ul>
+      </div>
       </div>
    </div>
 </template>
@@ -20,31 +23,18 @@
 <script>
   export default {
     name: 'PendientesComponent',
+    props: ['listaTareas'],
 
-    props:['listaTareas'],
+     computed: {
+       listaTareasPendientes (){
+         return this.listaTareas;
 
-    computed: {  
-      listaTareasPendientes(){
-        let lista = [];
-        for(let i = 0; i < this.listaTareas.length; i++)
-        {
-          let tarea = {
-            id: i,
-            nombre: this.listaTareas[i].nombre
-          }
-
-          if (this.listaTareas[i].estado == false)
-          {
-            lista.push(tarea); 
-          }
-        } 
-        return lista;
-      }
+       },
     },
-
+ 
     methods: {
-      marcarTareaResuelta(id){
-        this.$emit('marcarTareaResuelta', [id]);
+      cambiarEstadoTarea(id){
+        this.$emit('cambiarEstadoTarea', [id]);
       },
       eliminarTarea(id){
         this.$emit('eliminarTarea', [id]);
