@@ -1,6 +1,7 @@
+const { v4: uuidv4 } = require('uuid');
 export default class Tarea {
-  constructor(id, nombre, estado) {
-    this.id = id;
+  constructor(nombre, estado) {
+    this.id = uuidv4();
     this.nombre = nombre;
     this.estado = estado;
   }

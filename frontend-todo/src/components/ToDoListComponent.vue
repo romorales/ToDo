@@ -65,7 +65,7 @@ import {mapState} from 'vuex';
 
     methods: { 
       agregarTarea(){
-        const tarea = new Tarea(this.listaTareas.length, this.tarea, false);
+        const tarea = new Tarea(this.tarea, false);
         this.$store.dispatch('triggerFunction',
           tarea
         )

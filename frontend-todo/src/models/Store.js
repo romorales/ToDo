@@ -10,14 +10,25 @@ const store = createStore({
         state.listaTareas.push({id,nombre,estado});
     },
     cambiarEstadoTarea (state, id) {
-        let estado = state.listaTareas[id].estado;
-        state.listaTareas[id].estado = !estado;
+      for (let tarea of state.listaTareas) {
+        if (tarea.id === id[0]) {
+          tarea.estado = !tarea.estado;
+        }
+        }
       },
     updateData (state,item){
         state.listaTareas = item;
     },
     eliminarTarea (state, id) {
-        state.listaTareas.splice(id,1);
+        let index = '';
+        state.listaTareas.forEach(function (tarea, i) {
+            if (tarea.id === id[0]) 
+            {
+                index = i;
+            }
+        });
+       
+        state.listaTareas.splice(index,1);
       },
   },
   actions: {
