@@ -16,8 +16,18 @@
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
+            // Database connection string.
+            // Make sure to update the Password value below from "Your_password123" to your actual password.
+            var connection = @"Server=db;Database=master;User=sa;Password=Your_password123;";
+
+            // This line uses 'UseSqlServer' in the 'options' parameter
+            // with the connection string defined above.
+            // builder.Services.AddDbContext<ApplicationDbContext>(
+            //     options => options.UseSqlServer(connection));
+            
             builder.Services.AddDbContext<AplicationDbContext>(options =>
-                                                                options.UseSqlServer((builder.Configuration.GetConnectionString(""))));
+             options.UseSqlServer(connection));
+            //                                                     options.UseSqlServer((builder.Configuration.GetConnectionString(""))));
             builder.Services.AddCors(options => options.AddPolicy("AllowWebApp",
                                                 builder => builder.AllowAnyOrigin()
                                                             .AllowAnyHeader()

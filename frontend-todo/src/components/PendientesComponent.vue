@@ -6,7 +6,7 @@
             <h1 class="display-6 text-center" >Por hacer</h1>
             <ul class="list-group">
               <li v-for="tarea of listaTareasPendientes" :key="tarea.id" class="list-group-item d-flex justify-content-between">
-                <span class="cursor" v-on:click="cambiarEstadoTarea(tarea.id)">
+                <span class="cursor" v-on:click="cambiarEstadoTarea(tarea.id, tarea)">
                   <i class="fa-regular fa-circle"></i>
                 </span>
                  {{ tarea.nombre }}
@@ -33,8 +33,8 @@
     },
  
     methods: {
-      cambiarEstadoTarea(id){
-        this.$emit('cambiarEstadoTarea', [id]);
+      cambiarEstadoTarea(id, tarea){
+        this.$emit('cambiarEstadoTarea', [id], tarea);
       },
       eliminarTarea(id){
         this.$emit('eliminarTarea', [id]);

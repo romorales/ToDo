@@ -34,7 +34,6 @@
 </template>
 
 <script>
-//import axios from  "axios";
 import Tarea from '../models/Tarea.js';
 import PendientesComponent from './PendientesComponent'
 import CompletadasComponent from './CompletadasComponent'
@@ -66,34 +65,35 @@ import {mapState} from 'vuex';
     methods: { 
       agregarTarea(){
         const tarea = new Tarea(this.tarea, false);
-        this.$store.dispatch('triggerFunction',
-          tarea
-        )
-        this.tarea = '';
-        this.actualizarArrays();
+        this.$store.dispatch('triggerAgregarTarea', tarea).then(() =>
+        {
+          this.tarea = '';
+          this.actualizarArrays();
+        })
         },
-         cambiarEstadoTarea(id){
-        this.$store.commit('cambiarEstadoTarea', id);
-        this.actualizarArrays();
+         cambiarEstadoTarea(id, tarea){
+        this.$store.dispatch('triggerCambiarEstadoTarea', {id, tarea}).then(() => {
+          this.actualizarArrays();
+          })
         },
         eliminarTarea(id){
-        this.$store.commit('eliminarTarea', id);
-        this.actualizarArrays();
+        this.$store.dispatch('triggerEliminarTarea', id).then(() => {
+          this.actualizarArrays();
+          })
         },
         actualizarArrays(){
           this.tareasPendientes = this.$store.getters.getPendientes;
           this.tareasCompletadas = this.$store.getters.getCompletadas;
+        },
+        obtenerTareas(){
+          this.$store.dispatch('triggerGetTareas').then(() => {
+          this.actualizarArrays();
+          })
         }
+    }, 
+    created: function(){
+      this.obtenerTareas();
     }
-    //    obtenerTareas(){
-    //     axios.get("http://localhost:5288/api/Tarea").then(respuesta => {
-    //       console.log(respuesta);
-    //     })  
-    //   }
-    // }, 
-    // created: function(){
-    //   this.obtenerTareas();
-    // }
   }
 </script>
 

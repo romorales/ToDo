@@ -1,40 +1,48 @@
 import { createStore } from 'vuex'
-
+import axios from  "axios";
+const url = "http://localhost:5288/api/"
 const store = createStore({
     strict: true,
     state: {
     listaTareas: []
   },
   mutations: {
-    agregarTarea (state, {id,nombre,estado}) {
-        state.listaTareas.push({id,nombre,estado});
+    getTareas (state, tarea){
+      state.listaTareas = tarea;
     },
-    cambiarEstadoTarea (state, id) {
-      for (let tarea of state.listaTareas) {
-        if (tarea.id === id[0]) {
-          tarea.estado = !tarea.estado;
-        }
-        }
-      },
-    updateData (state,item){
-        state.listaTareas = item;
-    },
-    eliminarTarea (state, id) {
-        let index = '';
-        state.listaTareas.forEach(function (tarea, i) {
-            if (tarea.id === id[0]) 
-            {
-                index = i;
-            }
-        });
-       
-        state.listaTareas.splice(index,1);
-      },
   },
   actions: {
-    triggerFunction: (context, {id,nombre,estado}) => {
-        context.commit('agregarTarea', {id,nombre,estado})
-    }
+    async triggerAgregarTarea (context, tarea) {
+     await axios.post(url + "Tarea/", tarea).then(respuesta => {
+         console.log(respuesta);
+         return context.dispatch('triggerGetTareas');
+        }).catch(error => {
+                  console.log(error)
+        })
+    },
+    async triggerGetTareas (context) {
+       return axios.get(url + "Tarea").then(respuesta => {
+           context.commit('getTareas', respuesta.data);
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    async triggerEliminarTarea (context, id) {
+      await axios.delete(url + "Tarea/" + id).then(respuesta => {
+        console.log(respuesta);
+        return context.dispatch('triggerGetTareas');
+      }).catch(error => {
+                console.log(error)
+      })
+    },
+    async triggerCambiarEstadoTarea (context, {id, tarea}) {
+      await axios.put(url + "Tarea/" + id, tarea).then(respuesta => {
+        console.log(respuesta);
+        return context.dispatch('triggerGetTareas');
+      }).catch(error => {
+        console.log(error)
+      })
+    },
   },
   getters: {
     getPendientes:state => {

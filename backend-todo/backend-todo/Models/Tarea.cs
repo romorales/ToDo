@@ -9,9 +9,9 @@
 
         [Required]
         [Column(TypeName ="varchar(100)")]
-
         public string Nombre { get; set; }
-
+        
+        [Required]
         public bool Estado { get; set; }
     }
 }
